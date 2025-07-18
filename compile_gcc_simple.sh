@@ -16,9 +16,10 @@ fi
 
 gcc -c TermIO/src/tool_term_io.c $INCLUDE_OPT
 gcc -c TermIO/src/tool_data_io.c $INCLUDE_OPT
+gcc -c TermIO/src/tool_form_io.c $INCLUDE_OPT
 gcc -c Driver/src/mcu/s12x/drv_s12x_uart.c $INCLUDE_OPT
 gcc -c Driver/src/os/linux/drv_linux_term.c $INCLUDE_OPT
 gcc -c main.c $INCLUDE_OPT
 
-gcc main.o tool_data_io.o tool_term_io.o drv_s12x_uart.o drv_linux_term.o -o term
+gcc main.o tool_form_io.o tool_data_io.o tool_term_io.o drv_s12x_uart.o drv_linux_term.o -o term
 rm *.o

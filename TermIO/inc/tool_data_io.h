@@ -9,6 +9,8 @@ extern "C" {
 #include <stdint.h>
 #elif defined(__HIWARE__)
 #include "hiware_c99_stdint.h"
+#elif defined(__COMPILER_FCC911__)
+#include "fcc911_c99_stdint.h"
 #else
 #error "Not Support stdint"
 #endif

@@ -9,6 +9,8 @@ extern "C" {
 #include <stdint.h>
 #elif defined(__HIWARE__)
 #include "hiware_c99_stdint.h"
+#elif defined(__COMPILER_FCC911__)
+#include "fcc911_c99_stdint.h"
 #else
 #error "Not Support stdint"
 #endif
@@ -25,8 +27,8 @@ extern "C" {
 #define TERM_IO_STRING_HEX  1U
 #define TERM_IO_STRING_LAST (TERM_IO_STRING_HEX + 1U)
 
-#define TERM_IO_PRT_NO      0
-#define TERM_IO_PRT_LF      1
+#define TERM_IO_PRT_NO  0
+#define TERM_IO_PRT_LF  1
 
 extern int TERM_IO_Init(void);
 extern int TERM_IO_DeInit(void);

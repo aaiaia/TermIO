@@ -41,7 +41,7 @@
 #define __UART_ESC__(REG)
 #endif /* ENABLE_UART_STRING_ECHO */
 
-void Uart1_SetPin(void)
+void S12X_Uart1_SetPin(void)
 {
 #define INFUNC_GPIOM_TO_SCI1    0x2
     MODRRSTR regMODRR;
@@ -52,7 +52,7 @@ void Uart1_SetPin(void)
 #undef INFUNC_GPIOM_TO_SCI1
 }
 
-void Uart1_Init(uint16_t reg16_scibd)
+void S12X_Uart1_Init(uint16_t reg16_scibd)
 {
     SCI1CR2STR regSCI1CR2;
 
@@ -67,14 +67,14 @@ void Uart1_Init(uint16_t reg16_scibd)
     SCI1CR2 = regSCI1CR2.Byte;
 }
 
-uint8_t Uart1_PutByte(const uint8_t byte)
+uint8_t S12X_Uart1_PutByte(const uint8_t byte)
 {
     __UART_PUT_BYTE__(SCI1SR1_TC, SCI1DRL, byte);
 
     return byte;
 }
 
-uint8_t Uart1_GetByte(void)
+uint8_t S12X_Uart1_GetByte(void)
 {
     uint8_t byte;
 
@@ -83,12 +83,12 @@ uint8_t Uart1_GetByte(void)
     return byte;
 }
 
-void Uart1_DelByte(void)
+void S12X_Uart1_DelByte(void)
 {
     __UART_DEL__(SCI1SR1_TC, SCI1DRL);
 }
 
-void Uart1_SendString(const char* string, const char lf)
+void S12X_Uart1_SendString(const char* string, const char lf)
 {
     size_t i = 0U;
     while(string[i] != ASCII_CHAR_NUL)
@@ -102,7 +102,7 @@ void Uart1_SendString(const char* string, const char lf)
     }
 }
 
-void Uart1_SendData(const uint8_t* buffer, const size_t size)
+void S12X_Uart1_SendData(const uint8_t* buffer, const size_t size)
 {
     size_t i;
     for(i = 0U; i < size; i++)
@@ -112,7 +112,7 @@ void Uart1_SendData(const uint8_t* buffer, const size_t size)
     }
 }
 
-size_t Uart1_GetData(uint8_t* buffer, const size_t size)
+size_t S12X_Uart1_GetData(uint8_t* buffer, const size_t size)
 {
     size_t i;
     for(i = 0U; i < size; i++)

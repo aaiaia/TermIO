@@ -12,13 +12,14 @@
 * the software package with which this file was provided.
 *******************************************************************************/
 
-#ifndef MCU_INIT_H
-#define MCU_INIT_H
+#ifndef DRV_S12X_INIT_H
+#define DRV_S12X_INIT_H
 
 #ifdef __cplusplus
 extern "c" {
 #endif
 
+#if defined(__HIWARE__) && defined(__HCS12X__)/* MCU */
 /*
  * DevNote.HardWare Config Info
  * 1. Ext. Osc. Freq: 8MHz
@@ -46,8 +47,10 @@ extern "c" {
 
 void INIT_setup_Mcu_Clk(void);
 
+#endif /* defined(__HIWARE__) && defined(__HCS12X__) *//* MCU */
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MCU_INIT_H */
+#endif /* DRV_S12X_INIT_H */
