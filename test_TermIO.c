@@ -44,7 +44,7 @@ uint8_t g_stream[64] = {0};
 
 void (*jumpFunc)(void) = (void (*)(void))0UL;
 
-void main(void) {
+void test_TermIO(void) {
 #if 1   /* MENU_IO */
     union {
 #if __SIZEOF_POINTER__ == 2
