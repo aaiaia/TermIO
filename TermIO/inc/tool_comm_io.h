@@ -55,6 +55,21 @@ extern "C" {
 #define CTRL_KEY_ESC        ASCII_CHAR_ESC
 #define CTRL_KEY_DELETE     ASCII_CHAR_BS
 #define CTRL_KEY_ENTER      ASCII_CHAR_LF
+#elif ( defined(__GNUC__) || defined(__TASKING__) ) && defined(__TRICORE__)/* MCU */
+#include "drv_tc_asclin.h"
+#define INIT_COMM_IO() { \
+    TC3_ASCLIN0_Init();\
+}
+#define DEINIT_COMM_IO()
+#define GET_CHAR()          ((uint8_t)TC_ASCLIN0_GetByte())  // has return value
+#define PUT_CHAR(C)         TC_ASCLIN0_PutByte((uint8_t)C)   // has return value
+#define DEL_CHAR()          TC_ASCLIN0_DelByte()     // has no return
+#define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
+#define ECHO_CHAR(C)        PUT_CHAR(C)
+
+#define CTRL_KEY_ESC        ASCII_CHAR_ESC
+#define CTRL_KEY_DELETE     ASCII_CHAR_BS
+#define CTRL_KEY_ENTER      ASCII_CHAR_LF
 #else/* COMPILER_ID + NOT_SUPPORT */
 #warning "Not Support TermIO in this COMPILER"
 #define INIT_COMM_IO()
