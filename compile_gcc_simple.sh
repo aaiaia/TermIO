@@ -1,6 +1,7 @@
 #!/bin/bash
 INCLUDE_OPT=""
 INCLUDE_OPT="${INCLUDE_OPT} -I./"
+INCLUDE_OPT="${INCLUDE_OPT} -ICommon/inc"
 INCLUDE_OPT="${INCLUDE_OPT} -ITermIO/inc"
 INCLUDE_OPT="${INCLUDE_OPT} -ITermIO/inc/ascii"
 INCLUDE_OPT="${INCLUDE_OPT} -IDriver/inc/mcu/s12x"

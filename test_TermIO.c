@@ -1,16 +1,7 @@
 #include <stdio.h>
 #include <stddef.h> //size_t, NULL, sizeof
 #include <string.h>
-#if defined(__HIWARE__)
-#include <hidef.h>      /* common defines and macros */
-#include "derivative.h"      /* derivative-specific definitions */
-#include "hiware_c99_stdint.h"
-#elif defined(__COMPILER_FCC911__)
-#include "mb91467d.h"
-#include "fcc911_c99_stdint.h"
-#else
-#include <stdint.h>
-#endif /* __HIWARE__ */
+#include "termio_stdint.h" //alternates to stdint.h
 #include "test_TermIO.h"
 
 #include "tool_term_io.h"
@@ -25,15 +16,19 @@ void (*jumpFunc)(void) = (void (*)(void))0UL;
 void test_TermIO(void) {
 #if 1   /* MENU_IO */
     union {
-#if __SIZEOF_POINTER__ == 2
+#if OINTER____SIZEOF_POINTER__ == 2/* GNUC */
         uint16_t u16;
         uint16_t uint;
-#elif __SIZEOF_POINTER__ == 4
+#elif __SIZEOF_POINTER__ == 4/* GNUC */
         uint32_t u32;
         uint32_t uint;
-#elif __SIZEOF_POINTER__ == 8
+#elif __SIZEOF_POINTER__ == 8/* GNUC */
         uint64_t u64;
         uint64_t uint;
+#elif defined(__TASKING__)
+/* https://www.tasking.com/documentation/tricore/ctc/reference/clang_memqual.html */
+        uint32_t u32;
+        uint32_t uint;
 #else
 #error "__SIZEOF_POINTER__ is not supported"
 #endif

@@ -5,15 +5,7 @@
 extern "C" {
 #endif
 
-#if defined(__GNUC__)
-#include <stdint.h>
-#elif defined(__HIWARE__)
-#include "hiware_c99_stdint.h"
-#elif defined(__COMPILER_FCC911__)
-#include "fcc911_c99_stdint.h"
-#else
-#error "Not Support stdint"
-#endif
+#include "termio_stdint.h" //alternates to stdint.h
 #include <stddef.h> // size_t, NULL
 
 #define TERM_IO_MODE_NONE   0   // Attach Nothing
