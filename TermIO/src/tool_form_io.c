@@ -34,7 +34,7 @@ void FORM_IO_printU32ToDec(const uint32_t ui32, const char lf)
 {
     char buf[12];
 
-    (void)sprintf(buf, "%lu", ui32);
+    (void)sprintf(buf, "%lu", (unsigned long)ui32);
 
     TERM_IO_PutString(buf, TERM_IO_PRT_NO);
 
