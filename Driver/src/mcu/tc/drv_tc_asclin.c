@@ -24,7 +24,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *********************************************************************************************************************/
-#if ( defined(__GNUC__) || defined(__TASKING__) ) && defined(__TRICORE__)/* MCU */
+#if ( defined(__GNUC__) && defined(__TRICORE__) ) || defined(__TASKING__)/* MCU */
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -51,7 +51,7 @@ static IfxAsclin_Asc_Config ascConfig;
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-void init_ASCLIN_UART_MODULE(const IfxAsclin_Asc_Config *config)
+IfxAsclin_Status init_ASCLIN_UART_MODULE(const IfxAsclin_Asc_Config *config)
 {
     Ifx_ASCLIN      *asclinSFR = config->asclin;                        /* pointer to ASCLIN registers*/
     IfxAsclin_Status status    = IfxAsclin_Status_noError;
@@ -150,19 +150,18 @@ void init_ASCLIN_UART_MODULE(const IfxAsclin_Asc_Config *config)
 
     IfxAsclin_enableRxFifoFillLevelFlag(asclinSFR, TRUE);
     IfxAsclin_enableTxFifoFillLevelFlag(asclinSFR, TRUE);
-    
-        /* enable transfers */
+
+    /* enable transfers */
     IfxAsclin_enableRxFifoInlet(asclinSFR, TRUE);  // enabling Rx FIFO for recieving
     IfxAsclin_enableTxFifoOutlet(asclinSFR, TRUE); // enabling Tx FIFO for transmitting
 
     IfxAsclin_flushRxFifo(asclinSFR);              // flushing Rx FIFO
     IfxAsclin_flushTxFifo(asclinSFR);              // flushing Tx FIFO
 
-    return status;
+	return status;
 }
-/* This function initializes the 
-ASCLIN UART module */
-void TC3_ASCLIN0_Init(void)
+/* This function initializes the ASCLIN UART module */
+void TC_ASCLIN0_Init(void)
 {
     const IfxAsclin_Asc_Pins pins =
     {
@@ -172,7 +171,7 @@ void TC3_ASCLIN0_Init(void)
         &UART_PIN_TX,   IfxPort_OutputMode_pushPull,  /* TX pin           */
         IfxPort_PadDriver_cmosAutomotiveSpeed1
     };
-    
+
     /* Initialize an instance of IfxAsclin_Asc_Config with default values */
     IfxAsclin_Asc_initModuleConfig(&ascConfig, &MODULE_ASCLIN0);
 
@@ -181,7 +180,7 @@ void TC3_ASCLIN0_Init(void)
     /* Set the desired baud rate */
     ascConfig.baudrate.baudrate = UART_BAUDRATE;
 
-    init_ASCLIN_UART_MODULE(&ascConfig); /* Initialize module with above parameters */
+    (void)init_ASCLIN_UART_MODULE(&ascConfig); /* Initialize module with above parameters */
 }
 
 /* This function sends and receives the string "Hello World!" */

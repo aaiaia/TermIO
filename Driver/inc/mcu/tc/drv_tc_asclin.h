@@ -24,14 +24,14 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *********************************************************************************************************************/
-#if ( defined(__GNUC__) || defined(__TASKING__) ) && defined(__TRICORE__)/* MCU */
+#if ( defined(__GNUC__) && defined(__TRICORE__) ) || defined(__TASKING__)/* MCU */
 #ifndef DRV_TC_ASCLIN_H
 #define DRV_TC_ASCLIN_H
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
-void TC3_ASCLIN0_Init(void);                    /* Initialization function                                          */
+void TC_ASCLIN0_Init(void);                    /* Initialization function                                          */
 void TC_ASCLIN0_PutByte(char chr);
 char TC_ASCLIN0_GetByte(void);
 void TC_ASCLIN0_DelByte(void);

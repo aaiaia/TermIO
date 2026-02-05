@@ -7,31 +7,31 @@ extern "C" {
 
 #include "ascii_char.h"
 
+#include "termio_stdint.h"
 #if defined(__GNUC__) && defined(__linux__)/* COMPILER_ID + OS */
 #include <stdio.h>
 #include "drv_linux_term.h"
-#define INIT_COMM_IO()      linuxTermInit()
-#define DEINIT_COMM_IO()    linuxTermRestore()
+#define INIT_COMM_IO()      (linuxTermInit())
+#define DEINIT_COMM_IO()    (linuxTermRestore())
 #define GET_CHAR()          ((int)getchar())            // has return value
-#define PUT_CHAR(C)         putchar((int)C)             // has return value
-#define DEL_CHAR()          linuxTermDelChar()
+#define PUT_CHAR(C)         (putchar((int)C))           // has return value
+#define DEL_CHAR()          (linuxTermDelChar())
 #define ESC_CHAR(C)         PUT_CHAR(ASCII_CHAR_LF)
-#define ECHO_CHAR(C)        linuxTermEchoBack(C)        // has return value
+#define ECHO_CHAR(C)        (linuxTermEchoBack(C))      // has return value
 
 #define CTRL_KEY_ESC        ASCII_CHAR_ESC
 #define CTRL_KEY_DELETE     ASCII_CHAR_DEL
 #define CTRL_KEY_ENTER      ASCII_CHAR_LF
 #elif defined(__HIWARE__) && defined(__HCS12X__)/* COMPILER_ID + MCU */
-#include "hiware_c99_stdint.h"
 #include "drv_s12x_uart.h"
 #define INIT_COMM_IO() { \
     S12X_Uart1_Init(0x0011); \
     S12X_Uart1_SetPin(); \
 }
 #define DEINIT_COMM_IO()
-#define GET_CHAR()          ((uint8_t)S12X_Uart1_GetByte())  // has return value
-#define PUT_CHAR(C)         S12X_Uart1_PutByte((uint8_t)C)   // has return value
-#define DEL_CHAR()          S12X_Uart1_DelByte()     // has no return
+#define GET_CHAR()          ((uint8_t)S12X_Uart1_GetByte()) // has return value
+#define PUT_CHAR(C)         (S12X_Uart1_PutByte((uint8_t)C))// has return value
+#define DEL_CHAR()          (S12X_Uart1_DelByte())          // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 
@@ -39,31 +39,30 @@ extern "C" {
 #define CTRL_KEY_DELETE     ASCII_CHAR_BS
 #define CTRL_KEY_ENTER      ASCII_CHAR_LF
 #elif defined(__COMPILER_FCC911__) && defined(__CPU_MB91F467D__)/* MCU */
-#include "fcc911_c99_stdint.h"
 #include "drv_fr60_uart.h"
 #define INIT_COMM_IO() { \
     FR60_Uart4_Init();\
     FR60_Uart4_SetPin(); \
 }
 #define DEINIT_COMM_IO()
-#define GET_CHAR()          ((uint8_t)FR60_Uart4_GetByte())  // has return value
-#define PUT_CHAR(C)         FR60_Uart4_PutByte((uint8_t)C)   // has return value
-#define DEL_CHAR()          FR60_Uart4_DelByte()     // has no return
+#define GET_CHAR()          ((uint8_t)FR60_Uart4_GetByte()) // has return value
+#define PUT_CHAR(C)         (FR60_Uart4_PutByte((uint8_t)C))// has return value
+#define DEL_CHAR()          (FR60_Uart4_DelByte())          // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 
 #define CTRL_KEY_ESC        ASCII_CHAR_ESC
 #define CTRL_KEY_DELETE     ASCII_CHAR_BS
 #define CTRL_KEY_ENTER      ASCII_CHAR_LF
-#elif ( defined(__GNUC__) || defined(__TASKING__) ) && defined(__TRICORE__)/* MCU */
+#elif ( defined(__GNUC__) && defined(__TRICORE__) ) || defined(__TASKING__)/* MCU */
 #include "drv_tc_asclin.h"
 #define INIT_COMM_IO() { \
-    TC3_ASCLIN0_Init();\
+    TC_ASCLIN0_Init();\
 }
 #define DEINIT_COMM_IO()
 #define GET_CHAR()          ((uint8_t)TC_ASCLIN0_GetByte())  // has return value
-#define PUT_CHAR(C)         TC_ASCLIN0_PutByte((uint8_t)C)   // has return value
-#define DEL_CHAR()          TC_ASCLIN0_DelByte()     // has no return
+#define PUT_CHAR(C)         (TC_ASCLIN0_PutByte((uint8_t)C))   // has return value
+#define DEL_CHAR()          (TC_ASCLIN0_DelByte())     // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 

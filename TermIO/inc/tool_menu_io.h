@@ -5,15 +5,7 @@
 extern "C" {
 #endif
 
-#if defined(__GNUC__)
-#include <stdint.h>
-#elif defined(__HIWARE__)
-#include "hiware_c99_stdint.h"
-#elif defined(__COMPILER_FCC911__)
-#include "fcc911_c99_stdint.h"
-#else
-#error "Not Support stdint"
-#endif
+#include "termio_stdint.h" //alternates to stdint.h
 #include <stddef.h> // size_t, NULL
 #include "tool_term_io.h"
 #include "tool_form_io.h"
@@ -28,15 +20,14 @@ extern const char MENU_IO_IN_SIZE[];
 uint32_t CONV_IO_hexStringToU32(uint8_t* string);
 uint8_t CONV_IO_hexStringToStream(uint8_t* string, uint8_t* stream, uint16_t size);
 
-#if defined(__GNUC__)
-#define MENU_IO_CLR_WATCH_DOG
-#elif defined(__HIWARE__)
+#if defined(__HIWARE__)
 #define MENU_IO_CLR_WATCH_DOG
 #elif defined(__COMPILER_FCC911__)
 #include "mb91467d.h"
 #define MENU_IO_CLR_WATCH_DOG
 #else
-#error "Not Support Compiler"
+//defined(__GNUC__) || defined(__TASKING__)
+#define MENU_IO_CLR_WATCH_DOG
 #endif
 
 #define MENU_IO_IF_GO_TOP(STRBUF) {\
