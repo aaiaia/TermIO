@@ -52,9 +52,9 @@ void test_TermIO(void) {
     (void)dprintString((const char*)g_buf);
     (void)dprintString("\n");
 
-    dprintHex(hex, 32U, FORM_IO_PRE_HEX, DPRINT_LF);
-    dprintHex(hex, 16U, FORM_IO_PRE_HEX, DPRINT_LF);
-    dprintHex(hex,  8U, FORM_IO_PRE_HEX, DPRINT_LF);
+    dprintHex(hex, 32U, DPRINT_PRE_HEX, DPRINT_LF);
+    dprintHex(hex, 16U, DPRINT_PRE_HEX, DPRINT_LF);
+    dprintHex(hex,  8U, DPRINT_PRE_HEX, DPRINT_LF);
     dprintDec(dec, DPRINT_LF);
     dmemory(str, strlen(str));
 
@@ -94,9 +94,9 @@ void test_TermIO(void) {
 
                     __addr32__.vaddr = (void*)jumpFunc;
                     dprintString("default call addr: ");
-                    dprintHex((uint32_t)__addr32__.u32, 32U, FORM_IO_PRE_HEX, DPRINT_LF);
+                    dprintHex((uint32_t)__addr32__.u32, 32U, DPRINT_PRE_HEX, DPRINT_LF);
                     dprintString("data in addr: ");
-                    dprintHex((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U, FORM_IO_PRE_HEX, DPRINT_LF);
+                    dprintHex((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U, DPRINT_PRE_HEX, DPRINT_LF);
 
                     subMenu("[CALL] change call address? 'y'es no(ELSE): ", g_buf);
                     if((g_buf[0] == 'y') || (g_buf[0] == 'Y'))
@@ -107,9 +107,9 @@ void test_TermIO(void) {
 
                         __addr32__.vaddr = (void*)jumpFunc;
                         dprintString("changed call addr: ");
-                        dprintHex((uint32_t)__addr32__.u32, 32U, FORM_IO_PRE_HEX, DPRINT_LF);
+                        dprintHex((uint32_t)__addr32__.u32, 32U, DPRINT_PRE_HEX, DPRINT_LF);
                         dprintString("data in addr: ");
-                        dprintHex((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U, FORM_IO_PRE_HEX, DPRINT_LF);
+                        dprintHex((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U, DPRINT_PRE_HEX, DPRINT_LF);
                     }
 
                     subMenu("[CALL] really jump to this address? 'y'es no(ELSE): ", g_buf);
@@ -128,7 +128,7 @@ void test_TermIO(void) {
                 if((g_buf[0] == 'h') || (g_buf[0] == 'H'))
                 {
                     menuInHex(__hex__, g_buf);
-                    dprintHex(__hex__, 32U, FORM_IO_PRE_HEX, DPRINT_LF);
+                    dprintHex(__hex__, 32U, DPRINT_PRE_HEX, DPRINT_LF);
                 }
                 else if((g_buf[0] == 'r') || (g_buf[0] == 'R'))
                 {

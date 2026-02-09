@@ -9,6 +9,8 @@
 #define dprintLine()                        TERM_IO_PutString("\n", TERM_IO_PRT_NO)
 #define dkeyinString(BUF)                   TERM_IO_GetString((char*)BUF, sizeof(BUF))
 #define dkeyinHEX(BUF)                      TERM_IO_GetHexString((char*)BUF, sizeof(BUF))
+#define DPRINT_PRE_NO                       FORM_IO_PRE_NO
+#define DPRINT_PRE_HEX                      FORM_IO_PRE_HEX
 #define dprintHex(U32, BITLEN, PREFIX, LF)  FORM_IO_printU32ToHex(U32, BITLEN, PREFIX, LF);
 #define dprintDec(U32, LF)                  FORM_IO_printU32ToDec(U32, LF);
 #define dmemory(ADDR, SIZE)                 FORM_IO_printMemory((const void*)ADDR, SIZE)
