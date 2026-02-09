@@ -11,8 +11,10 @@
 #define dkeyinHEX(BUF)                      TERM_IO_GetHexString((char*)BUF, sizeof(BUF))
 #define DPRINT_PRE_NO                       FORM_IO_PRE_NO
 #define DPRINT_PRE_HEX                      FORM_IO_PRE_HEX
-#define dprintHex(U32, BITLEN, PREFIX, LF)  FORM_IO_printU32ToHex(U32, BITLEN, PREFIX, LF);
-#define dprintDec(U32, LF)                  FORM_IO_printU32ToDec(U32, LF);
+#define dprintHex(U32, BITLEN, PREFIX, LF)  FORM_IO_printU32ToHex(U32, BITLEN, PREFIX, LF)
+#define dprintHexPFLF(U32, BITLEN)          FORM_IO_printU32ToHex(U32, BITLEN, DPRINT_PRE_HEX, DPRINT_LF)
+#define dprintDec(U32, LF)                  FORM_IO_printU32ToDec(U32, LF)
+#define dprintDecLF(U32)                    FORM_IO_printU32ToDec(U32, DPRINT_LF)
 #define dmemory(ADDR, SIZE)                 FORM_IO_printMemory((const void*)ADDR, SIZE)
 
 #define menuInHex(U32VAR, STRBUF)           MENU_IO_KEYIN_HEX(U32VAR, STRBUF)
