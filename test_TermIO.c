@@ -2,7 +2,7 @@
 #include <stddef.h> //size_t, NULL, sizeof
 #include <string.h>
 #include "termio_stdint.h" //alternates to stdint.h
-#include "test_TermIO.h"
+#include "tool_test_io.h"
 
 #include "tool_term_io.h"
 #include "tool_form_io.h"
@@ -53,11 +53,11 @@ void test_TermIO(void) {
     (void)dprintString("\n");
 
     dprintHex(hex, 32U, DPRINT_PRE_HEX, DPRINT_LF);
-    dprintHexPFLF(hex, 32U);
+    dprintHexLF(hex, 32U);
     dprintHex(hex, 16U, DPRINT_PRE_HEX, DPRINT_LF);
-    dprintHexPFLF(hex, 16U);
+    dprintHexLF(hex, 16U);
     dprintHex(hex,  8U, DPRINT_PRE_HEX, DPRINT_LF);
-    dprintHexPFLF(hex,  8U);
+    dprintHexLF(hex,  8U);
     dprintDec(dec, DPRINT_LF);
     dprintDecLF(dec);
     dmemory(str, strlen(str));
@@ -98,9 +98,9 @@ void test_TermIO(void) {
 
                     __addr32__.vaddr = (void*)jumpFunc;
                     dprintString("default call addr: ");
-                    dprintHexPFLF((uint32_t)__addr32__.u32, 32U);
+                    dprintHexLF((uint32_t)__addr32__.u32, 32U);
                     dprintString("data in addr: ");
-                    dprintHexPFLF((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U);
+                    dprintHexLF((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U);
 
                     subMenu("[CALL] change call address? 'y'es no(ELSE): ", g_buf);
                     if((g_buf[0] == 'y') || (g_buf[0] == 'Y'))
@@ -111,9 +111,9 @@ void test_TermIO(void) {
 
                         __addr32__.vaddr = (void*)jumpFunc;
                         dprintString("changed call addr: ");
-                        dprintHexPFLF((uint32_t)__addr32__.u32, 32U);
+                        dprintHexLF((uint32_t)__addr32__.u32, 32U);
                         dprintString("data in addr: ");
-                        dprintHexPFLF((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U);
+                        dprintHexLF((uint32_t)(*((uint32_t*)__addr32__.vaddr)), 32U);
                     }
 
                     subMenu("[CALL] really jump to this address? 'y'es no(ELSE): ", g_buf);
@@ -132,7 +132,7 @@ void test_TermIO(void) {
                 if((g_buf[0] == 'h') || (g_buf[0] == 'H'))
                 {
                     menuInHex(__hex__, g_buf);
-                    dprintHexPFLF(__hex__, 32U);
+                    dprintHexLF(__hex__, 32U);
                 }
                 else if((g_buf[0] == 'r') || (g_buf[0] == 'R'))
                 {

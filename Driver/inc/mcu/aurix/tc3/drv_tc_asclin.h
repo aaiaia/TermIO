@@ -24,16 +24,22 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *********************************************************************************************************************/
-#if ( defined(__GNUC__) && defined(__TRICORE__) ) || defined(__TASKING__)/* MCU */
-#ifndef DRV_TC_ASCLIN_H
-#define DRV_TC_ASCLIN_H
-
+#if ( defined(__GNUC__) && defined(__TRICORE__) ) \
+ || ( defined(__TASKING__) && defined(__CTC__) )/* MCU */
+#ifndef DRV_AURIX_TC3_ASCLIN_H
+#define DRV_AURIX_TC3_ASCLIN_H
+#include <stdint.h>
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
-void TC_ASCLIN0_Init(void);                    /* Initialization function                                          */
-void TC_ASCLIN0_PutByte(char chr);
-char TC_ASCLIN0_GetByte(void);
-void TC_ASCLIN0_DelByte(void);
-#endif /* DRV_TC_ASCLIN_H */
+void AURIX_TC3_ASCLIN0_Init(void);
+void AURIX_TC3_ASCLIN0_PutByte(uint8_t c);
+uint8_t AURIX_TC3_ASCLIN0_GetByte(void);
+void AURIX_TC3_ASCLIN0_DelByte(void);
+
+void AURIX_TC3_ASCLIN1_Init(void);
+void AURIX_TC3_ASCLIN1_PutByte(uint8_t c);
+uint8_t AURIX_TC3_ASCLIN1_GetByte(void);
+void AURIX_TC3_ASCLIN1_DelByte(void);
+#endif /* DRV_AURIX_TC3_ASCLIN_H */
 #endif /* MCU */

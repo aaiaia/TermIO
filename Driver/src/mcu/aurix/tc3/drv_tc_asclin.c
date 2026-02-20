@@ -24,10 +24,13 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *********************************************************************************************************************/
-#if ( defined(__GNUC__) && defined(__TRICORE__) ) || defined(__TASKING__)/* MCU */
+#if ( defined(__GNUC__) && defined(__TRICORE__) ) \
+ || ( defined(__TASKING__) && defined(__CTC__) )/* MCU */
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
+#include "drv_tc_asclin.h"
+
 #include "IfxAsclin_Asc.h"
 #include "IfxCpu_Irq.h"
 #include "IfxAsclin_PinMap.h"
@@ -38,15 +41,42 @@
 /*********************************************************************************************************************/
 #define UART_BAUDRATE           115200                                  /* UART baud rate in bit/s                  */
 
-#define UART_PIN_RX             IfxAsclin0_RXA_P14_1_IN                 /* UART receive port pin                    */
-#define UART_PIN_TX             IfxAsclin0_TX_P14_0_OUT                 /* UART transmit port pin                   */
-
+#define UART0_PIN_RX            IfxAsclin0_RXA_P14_1_IN                 /* UART receive port pin                    */
+#define UART0_PIN_TX            IfxAsclin0_TX_P14_0_OUT                 /* UART transmit port pin                   */
+#define UART1_PIN_RX            IfxAsclin1_RXB_P15_5_IN                 /* UART receive port pin                    */
+#define UART1_PIN_TX            IfxAsclin1_TX_P15_4_OUT                 /* UART transmit port pin                   */
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
+/* ASCLIN0 */
 /* Declaration of the ASC handle */
-static IfxAsclin_Asc_Config ascConfig;
-
+static IfxAsclin_Asc_Config ascConfig0;
+/* Declaration of the ASC pin */
+static const IfxAsclin_Asc_Pins ascPins0 = {
+    NULL_PTR,       IfxPort_InputMode_pullUp,     /* CTS pin not used */
+    &UART0_PIN_RX,  IfxPort_InputMode_pullUp,     /* RX pin           */
+    NULL_PTR,       IfxPort_OutputMode_pushPull,  /* RTS pin not used */
+    &UART0_PIN_TX,  IfxPort_OutputMode_pushPull,  /* TX pin           */
+    IfxPort_PadDriver_cmosAutomotiveSpeed1
+};
+/* ASCLIN1 */
+/* Declaration of the ASC handle */
+static IfxAsclin_Asc_Config ascConfig1;
+/* Declaration of the ASC pin */
+static const IfxAsclin_Asc_Pins ascPins1 = {
+    NULL_PTR,       IfxPort_InputMode_pullUp,     /* CTS pin not used */
+    &UART1_PIN_RX,  IfxPort_InputMode_pullUp,     /* RX pin           */
+    NULL_PTR,       IfxPort_OutputMode_pushPull,  /* RTS pin not used */
+    &UART1_PIN_TX,  IfxPort_OutputMode_pushPull,  /* TX pin           */
+    IfxPort_PadDriver_cmosAutomotiveSpeed1
+};
+/*********************************************************************************************************************/
+/*------------------------------------------Internal Function Declarations-------------------------------------------*/
+/*********************************************************************************************************************/
+static inline void AURIX_TC3_ASCLIN_Init(IfxAsclin_Asc_Config *ascConfig, Ifx_ASCLIN *asclin, IfxAsclin_Asc_Pins *ascPins);
+static inline void AURIX_TC3_ASCLIN_PutByte(IfxAsclin_Asc_Config* ascConfig, unsigned char c);
+static inline unsigned char AURIX_TC3_ASCLIN_GetByte(IfxAsclin_Asc_Config* ascConfig);
+static inline void AURIX_TC3_ASCLIN_DelByte(IfxAsclin_Asc_Config* ascConfig);
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
@@ -158,51 +188,87 @@ IfxAsclin_Status init_ASCLIN_UART_MODULE(const IfxAsclin_Asc_Config *config)
     IfxAsclin_flushRxFifo(asclinSFR);              // flushing Rx FIFO
     IfxAsclin_flushTxFifo(asclinSFR);              // flushing Tx FIFO
 
-	return status;
+    return status;
 }
-/* This function initializes the ASCLIN UART module */
-void TC_ASCLIN0_Init(void)
-{
-    const IfxAsclin_Asc_Pins pins =
-    {
-        NULL_PTR,       IfxPort_InputMode_pullUp,     /* CTS pin not used */
-        &UART_PIN_RX,   IfxPort_InputMode_pullUp,     /* RX pin           */
-        NULL_PTR,       IfxPort_OutputMode_pushPull,  /* RTS pin not used */
-        &UART_PIN_TX,   IfxPort_OutputMode_pushPull,  /* TX pin           */
-        IfxPort_PadDriver_cmosAutomotiveSpeed1
-    };
 
+/* This function initializes the ASCLIN UART module */
+static inline void AURIX_TC3_ASCLIN_Init(IfxAsclin_Asc_Config *ascConfig, Ifx_ASCLIN *asclin, IfxAsclin_Asc_Pins *ascPins)
+{
     /* Initialize an instance of IfxAsclin_Asc_Config with default values */
-    IfxAsclin_Asc_initModuleConfig(&ascConfig, &MODULE_ASCLIN0);
+    IfxAsclin_Asc_initModuleConfig(ascConfig, asclin);
 
     /* Pin configuration */
-    ascConfig.pins = &pins;
+    ascConfig->pins = ascPins;
     /* Set the desired baud rate */
-    ascConfig.baudrate.baudrate = UART_BAUDRATE;
+    ascConfig->baudrate.baudrate = UART_BAUDRATE;
 
-    (void)init_ASCLIN_UART_MODULE(&ascConfig); /* Initialize module with above parameters */
+    (void)init_ASCLIN_UART_MODULE(ascConfig); /* Initialize module with above parameters */
 }
 
 /* This function sends and receives the string "Hello World!" */
-void TC_ASCLIN0_PutByte(char chr)
+static inline void AURIX_TC3_ASCLIN_PutByte(IfxAsclin_Asc_Config* ascConfig, unsigned char c)
 {
-    IfxAsclin_write8(ascConfig.asclin, (char *)&chr, 1);
-    while(IfxAsclin_getTxFifoFillLevel(ascConfig.asclin) != 0);
+    IfxAsclin_write8(ascConfig->asclin, &c, 1U);
+    while(IfxAsclin_getTxFifoFillLevel(ascConfig->asclin) != 0);
 }
 
-char TC_ASCLIN0_GetByte(void)
+static inline unsigned char AURIX_TC3_ASCLIN_GetByte(IfxAsclin_Asc_Config* ascConfig)
 {
-    char chr = 0;
-    while(IfxAsclin_getRxFifoFillLevel(ascConfig.asclin) == 0);
-    IfxAsclin_read8(ascConfig.asclin, &chr, 1);
-    return chr;
+    unsigned char c = 0;
+    while(IfxAsclin_getRxFifoFillLevel(ascConfig->asclin) == 0);
+    IfxAsclin_read8(ascConfig->asclin, &c, 1U);
+    return c;
 }
 
-void TC_ASCLIN0_DelByte(void)
+static inline void AURIX_TC3_ASCLIN_DelByte(IfxAsclin_Asc_Config* ascConfig)
 {
-    char delChrs[] = { ASCII_CHAR_BS, ASCII_CHAR_DEL, ASCII_CHAR_BS };
-    IfxAsclin_write8(ascConfig.asclin, (char *)delChrs, 3);
-    while(IfxAsclin_getTxFifoFillLevel(ascConfig.asclin) != 0);
+    const unsigned char delChrs[] = { ASCII_CHAR_BS, ASCII_CHAR_DEL, ASCII_CHAR_BS };
+    IfxAsclin_write8(ascConfig->asclin, delChrs, 3U);
+    while(IfxAsclin_getTxFifoFillLevel(ascConfig->asclin) != 0);
+}
+
+/* This function initializes the ASCLIN UART module */
+void AURIX_TC3_ASCLIN0_Init(void)
+{
+    AURIX_TC3_ASCLIN_Init(&ascConfig0, &MODULE_ASCLIN0, &ascPins0);
+}
+
+/* This function sends and receives the string "Hello World!" */
+void AURIX_TC3_ASCLIN0_PutByte(uint8_t c)
+{
+    AURIX_TC3_ASCLIN_PutByte(&ascConfig0, (unsigned char)c);
+}
+
+uint8_t AURIX_TC3_ASCLIN0_GetByte(void)
+{
+    return (uint8_t)AURIX_TC3_ASCLIN_GetByte(&ascConfig0);;
+}
+
+void AURIX_TC3_ASCLIN0_DelByte(void)
+{
+    AURIX_TC3_ASCLIN_DelByte(&ascConfig0);
+}
+
+/* This function initializes the ASCLIN UART module */
+void AURIX_TC3_ASCLIN1_Init(void)
+{
+    AURIX_TC3_ASCLIN_Init(&ascConfig1, &MODULE_ASCLIN1, &ascPins1);
+}
+
+/* This function sends and receives the string "Hello World!" */
+void AURIX_TC3_ASCLIN1_PutByte(uint8_t c)
+{
+    AURIX_TC3_ASCLIN_PutByte(&ascConfig1, (unsigned char)c);
+}
+
+uint8_t AURIX_TC3_ASCLIN1_GetByte(void)
+{
+    return (uint8_t)AURIX_TC3_ASCLIN_GetByte(&ascConfig1);;
+}
+
+void AURIX_TC3_ASCLIN1_DelByte(void)
+{
+    AURIX_TC3_ASCLIN_DelByte(&ascConfig1);
 }
 
 #endif /* MCU */

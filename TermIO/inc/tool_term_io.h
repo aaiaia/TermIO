@@ -7,6 +7,7 @@ extern "C" {
 
 #include "termio_stdint.h" //alternates to stdint.h
 #include <stddef.h> // size_t, NULL
+#include "tool_term_io.h"
 
 #define TERM_IO_MODE_NONE   0   // Attach Nothing
 #define TERM_IO_MODE_UNIX   1   // Attach LF
