@@ -84,7 +84,7 @@ void test_TermIO(void) {
         {
             for(;;)
             {
-                subMenu("[DEVICE] 'm'emory, go 't'op: ", g_buf);
+                subMenu("[DEVICE] 'm'emory, 'c'mp memory, call('j'ump) addr, go 't'op: ", g_buf);
                 if((g_buf[0] == 'm') || (g_buf[0] == 'M'))
                 {
                     menuInAddr(__hex__, g_buf);
@@ -93,6 +93,20 @@ void test_TermIO(void) {
                     dmemory(__addr32__.vaddr, __size__);
                 }
                 else if((g_buf[0] == 'c') || (g_buf[0] == 'C'))
+                {
+#define TEST_SIZE   512
+                    volatile uint8_t src0[TEST_SIZE] = {0};
+                    volatile uint8_t src1[TEST_SIZE] = {0};
+                    dcmpmemory(src0, src1, TEST_SIZE);
+
+                    for(size_t i = 311; i<319; i++)
+                    {
+                        src1[i] = (uint8_t)i;
+                    }
+                    dcmpmemory(src0, src1, TEST_SIZE);
+#undef TEST_SIZE
+                }
+                else if((g_buf[0] == 'j') || (g_buf[0] == 'J'))
                 {
                     jumpFunc = (void (*)(void))0UL;
 

@@ -14,6 +14,7 @@ extern "C" {
 void FORM_IO_printU32ToHex(const uint32_t ui32, const uint8_t bits, const char prefix, const char lf);
 void FORM_IO_printU32ToDec(const uint32_t ui32, const char lf);
 void FORM_IO_printMemory(const void* addr, const uint32_t size);
+void FORM_IO_printCmpMemory(const void* s0Addr, const void* s1Addr, const uint32_t size);
 
 #ifdef __cplusplus
 }
