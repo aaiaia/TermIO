@@ -52,13 +52,65 @@ void FORM_IO_printMemory(const void* addr, const uint32_t size)
     for(i = 0UL; i < size; i+=16UL)
     {
         TERM_IO_PutString("[", TERM_IO_PRT_NO);
-        FORM_IO_printU32ToHex((uint32_t)(&((uint8_t*)addr)[i]), _ADDR_BIT_LEN_, FORM_IO_PRE_HEX, TERM_IO_PRT_NO);
+        FORM_IO_printU32ToHex((uintptr_t)(&((uint8_t*)addr)[i]), _ADDR_BIT_LEN_, FORM_IO_PRE_HEX, TERM_IO_PRT_NO);
         TERM_IO_PutString("]\t", TERM_IO_PRT_NO);
 
         TERM_IO_PutString("0x ", TERM_IO_PRT_NO);
         for(j = 0U; j < 16UL; j++)
         {
             FORM_IO_printU32ToHex((uint32_t)(((uint8_t*)addr)[i+j]), _BYTE_BIT_LEN_, FORM_IO_PRE_NO, TERM_IO_PRT_NO);
+            TERM_IO_PutString(" ", TERM_IO_PRT_NO);
+            if(i+j+1U >= size)
+            {
+                break;
+            }
+        }
+        TERM_IO_PutString("", TERM_IO_PRT_LF);
+    }
+    TERM_IO_PutString("[size = ", TERM_IO_PRT_NO);
+    FORM_IO_printU32ToHex(size, 32U, FORM_IO_PRE_HEX, TERM_IO_PRT_NO);
+    TERM_IO_PutString("]", TERM_IO_PRT_LF);
+#undef _ADDR_BIT_LEN_
+#undef _BYTE_BIT_LEN_
+}
+
+void FORM_IO_printCmpMemory(const void* s0Addr, const void* s1Addr, const uint32_t size)
+{
+#define _ADDR_BIT_LEN_  (sizeof(void*) << 3U)
+#define _BYTE_BIT_LEN_  (sizeof(uint8_t) << 3U)
+    uint32_t i, j=0UL;
+    for(i = 0UL; i < size; i+=16UL)
+    {
+        TERM_IO_PutString("[", TERM_IO_PRT_NO);
+        FORM_IO_printU32ToHex((uintptr_t)(&((uint8_t*)s0Addr)[i]), _ADDR_BIT_LEN_, FORM_IO_PRE_HEX, TERM_IO_PRT_NO);
+        TERM_IO_PutString("]", TERM_IO_PRT_NO);
+
+        TERM_IO_PutString("[", TERM_IO_PRT_NO);
+        FORM_IO_printU32ToHex((uintptr_t)(&((uint8_t*)s1Addr)[i]), _ADDR_BIT_LEN_, FORM_IO_PRE_HEX, TERM_IO_PRT_NO);
+        TERM_IO_PutString("]\t", TERM_IO_PRT_NO);
+
+        TERM_IO_PutString("0x ", TERM_IO_PRT_NO);
+        for(j = 0U; j < 16UL; j++)
+        {
+            uint8_t diff;
+            if(((uint8_t*)s0Addr)[i+j] != ((uint8_t*)s1Addr)[i+j])
+            {
+                diff = 1U;
+            }
+            else
+            {
+                diff = 0U;
+            }
+            if(diff)    TERM_IO_PutString("\033[31m", TERM_IO_PRT_NO);
+            else        TERM_IO_PutString("\033[0m", TERM_IO_PRT_NO);
+            FORM_IO_printU32ToHex((uint32_t)(((uint8_t*)s0Addr)[i+j]), _BYTE_BIT_LEN_, FORM_IO_PRE_NO, TERM_IO_PRT_NO);
+            if(diff)    TERM_IO_PutString("\033[33m!\033[0m", TERM_IO_PRT_NO);
+            else        TERM_IO_PutString("=", TERM_IO_PRT_NO);
+            if(diff)    TERM_IO_PutString("\033[32m", TERM_IO_PRT_NO);
+            else        TERM_IO_PutString("\033[0m", TERM_IO_PRT_NO);
+            FORM_IO_printU32ToHex((uint32_t)(((uint8_t*)s1Addr)[i+j]), _BYTE_BIT_LEN_, FORM_IO_PRE_NO, TERM_IO_PRT_NO);
+            if(diff)    TERM_IO_PutString("\033[0m", TERM_IO_PRT_NO);
+            else        TERM_IO_PutString("\033[0m", TERM_IO_PRT_NO);
             TERM_IO_PutString(" ", TERM_IO_PRT_NO);
             if(i+j+1U >= size)
             {
