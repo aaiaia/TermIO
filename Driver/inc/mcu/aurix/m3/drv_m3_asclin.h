@@ -7,6 +7,7 @@
 void AURIX_M3_ASCLIN1_Init(void);
 void AURIX_M3_ASCLIN1_PutByte(uint8_t c);
 uint8_t AURIX_M3_ASCLIN1_GetByte(void);
+int AURIX_M3_ASCLIN1_GetByte(uint8_t* c, uint32_t timeout);
 void AURIX_M3_ASCLIN1_DelByte(void);
 void AURIX_M3_ASCLIN1_Deinit(void);
 

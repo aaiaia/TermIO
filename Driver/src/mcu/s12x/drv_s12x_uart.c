@@ -18,6 +18,16 @@
     while(!SREG); \
     BYTE = DREG; \
 }
+#define __UART_GET_BYTE_TIMEOUT__(SREG, DREG, BYTE, TIME, TIMEOUT) { \
+    (TIME) = 0U;
+    while(!SREG) { \
+        (TIME)++;
+        if((TIMEOUT) <= (TIME)) { \
+            break;
+        } \
+    }; \
+    BYTE = DREG; \
+}
 #define __UART_PUT_BYTE__(SREG, DREG, BYTE) { \
     while(!SREG); \
     DREG = BYTE; \
@@ -81,6 +91,16 @@ uint8_t S12X_Uart1_GetByte(void)
     __UART_GET_BYTE__(SCI1SR1_RDRF, SCI1DRL, byte);
 
     return byte;
+}
+
+int S12X_Uart1_GetByte_TimeOut(char* c, unsigned int timeout)
+{
+    uint8_t byte;
+    unsigned int time;
+    __UART_GET_BYTE_TIMEOUT__(SCI1SR1_RDRF, SCI1DRL, byte, time, timeout);
+    *c = byte;
+
+    return (time < timeout)?(0):(-1);
 }
 
 void S12X_Uart1_DelByte(void)

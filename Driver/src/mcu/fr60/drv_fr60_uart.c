@@ -17,6 +17,17 @@
     while(!SREG)    IN_WAIT_STATEMENT; \
     BYTE = DREG; \
 }
+#define __UART_GET_BYTE_TIMEOUT__(SREG, DREG, BYTE, IN_WAIT_STATEMENT, TIME, TIMEOUT) { \
+    (TIME) = 0U;
+    while(!SREG) {
+        IN_WAIT_STATEMENT; \
+        (TIME)++;
+        if((TIMEOUT) <= (TIME)) { \
+            break;
+        } \
+    } \
+    BYTE = DREG; \
+}
 #define __UART_PUT_BYTE__(SREG, DREG, BYTE, IN_WAIT_STATEMENT) { \
     while(!SREG)    IN_WAIT_STATEMENT; \
     DREG = BYTE; \
@@ -90,6 +101,16 @@ uint8_t FR60_Uart4_GetByte(void)
     __UART_GET_BYTE__(SSR04_RDRF, RDR04, byte, HWWD_CL = 0);
 
     return byte;
+}
+int FR60_Uart4_GetByte_TimeOut(uint8_t* c, uint32_t timeout)
+{
+    uint8_t byte;
+    uint32_t time;
+
+    __UART_GET_BYTE_TIMEOUT__(SSR04_RDRF, RDR04, byte, HWWD_CL = 0, time, timeout);
+    *c = byte;
+
+    return (time < timeout)?(0):(-1);
 }
 
 void FR60_Uart4_DelByte(void)

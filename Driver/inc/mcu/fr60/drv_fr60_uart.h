@@ -23,6 +23,7 @@ void FR60_Uart4_SetPin(void);
 void FR60_Uart4_Init(void);
 uint8_t FR60_Uart4_PutByte(const uint8_t val);
 uint8_t FR60_Uart4_GetByte(void);
+int FR60_Uart4_GetByte_TimeOut(uint8_t* c, uint32_t timeout); /* NOT_TESTED */
 void FR60_Uart4_DelByte(void);
 void FR60_Uart4_SendString(const char* string, const char lf);
 void FR60_Uart4_SendData(const uint8_t* buffer, const size_t size);
