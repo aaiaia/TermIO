@@ -35,11 +35,13 @@
 void AURIX_TC3_ASCLIN0_Init(void);
 void AURIX_TC3_ASCLIN0_PutByte(uint8_t c);
 uint8_t AURIX_TC3_ASCLIN0_GetByte(void);
+int AURIX_TC3_ASCLIN0_GetByte_TimeOut(uint8_t* c, uint32_t timeout);
 void AURIX_TC3_ASCLIN0_DelByte(void);
 
 void AURIX_TC3_ASCLIN1_Init(void);
 void AURIX_TC3_ASCLIN1_PutByte(uint8_t c);
 uint8_t AURIX_TC3_ASCLIN1_GetByte(void);
+int AURIX_TC3_ASCLIN1_GetByte_TimeOut(uint8_t* c, uint32_t timeout);
 void AURIX_TC3_ASCLIN1_DelByte(void);
 #endif /* DRV_AURIX_TC3_ASCLIN_H */
 #endif /* MCU */

@@ -71,6 +71,22 @@ uint8_t AURIX_M3_ASCLIN1_GetByte(void)
     return c;
 }
 
+int AURIX_M3_ASCLIN1_GetByte(uint8_t* c, uint32_t timeout)
+{
+    uint8_t c = 0;
+    uint32_t time = 0U;
+    if(uart1.isInit == 1)
+    {
+        while(uart1.rxCon->fillLevel == 0)
+        {
+            time++;
+            if(timeout <= time) break;
+        }
+        *c = (uint8_t)(*uart1.rxData);
+    }
+    return (time < timeout)?(0):(-1);
+}
+
 void AURIX_M3_ASCLIN1_Deinit(void)
 {
     uart1.rxData = (void *)0;

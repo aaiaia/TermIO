@@ -14,6 +14,7 @@ extern "C" {
 #define INIT_COMM_IO()      (linuxTermInit())
 #define DEINIT_COMM_IO()    (linuxTermRestore())
 #define GET_CHAR()          ((int)getchar())            // has return value
+#define GET_CHAR_TIME(P, T) ((*(P)) = GET_CHAR())       /* P: pointer, T: TimeOut, NOT_SUPPORT: POSIX */
 #define PUT_CHAR(C)         (putchar((int)C))           // has return value
 #define DEL_CHAR()          (linuxTermDelChar())
 #define ESC_CHAR(C)         PUT_CHAR(ASCII_CHAR_LF)
@@ -29,9 +30,10 @@ extern "C" {
     S12X_Uart1_SetPin(); \
 }
 #define DEINIT_COMM_IO()
-#define GET_CHAR()          ((uint8_t)S12X_Uart1_GetByte()) // has return value
-#define PUT_CHAR(C)         (S12X_Uart1_PutByte((uint8_t)C))// has return value
-#define DEL_CHAR()          (S12X_Uart1_DelByte())          // has no return
+#define GET_CHAR()          ((uint8_t)S12X_Uart1_GetByte())     // has return value
+#define GET_CHAR_TIME(P, T) (S12X_Uart1_GetByte_TimeOut(P, T))  /* Return: 0 or else, P: pointer, T: TimeOut, NOT_SUPPORT: POSIX */
+#define PUT_CHAR(C)         (S12X_Uart1_PutByte((uint8_t)C))    // has return value
+#define DEL_CHAR()          (S12X_Uart1_DelByte())              // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 
@@ -45,9 +47,10 @@ extern "C" {
     FR60_Uart4_SetPin(); \
 }
 #define DEINIT_COMM_IO()
-#define GET_CHAR()          ((uint8_t)FR60_Uart4_GetByte()) // has return value
-#define PUT_CHAR(C)         (FR60_Uart4_PutByte((uint8_t)C))// has return value
-#define DEL_CHAR()          (FR60_Uart4_DelByte())          // has no return
+#define GET_CHAR()          ((uint8_t)FR60_Uart4_GetByte())     // has return value
+#define GET_CHAR_TIME(P, T) (FR60_Uart4_GetByte_TimeOut(P, T))  /* Return: 0 or else, P: pointer, T: TimeOut, NOT_SUPPORT: POSIX */
+#define PUT_CHAR(C)         (FR60_Uart4_PutByte((uint8_t)C))    // has return value
+#define DEL_CHAR()          (FR60_Uart4_DelByte())              // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 
@@ -62,9 +65,10 @@ extern "C" {
     AURIX_TC3_ASCLIN1_Init();\
 }
 #define DEINIT_COMM_IO()
-#define GET_CHAR()          ((uint8_t)AURIX_TC3_ASCLIN0_GetByte())  // has return value
-#define PUT_CHAR(C)         (AURIX_TC3_ASCLIN0_PutByte((uint8_t)C))   // has return value
-#define DEL_CHAR()          (AURIX_TC3_ASCLIN0_DelByte())     // has no return
+#define GET_CHAR()          ((uint8_t)AURIX_TC3_ASCLIN0_GetByte())      // has return value
+#define GET_CHAR_TIME(P, T) (AURIX_TC3_ASCLIN0_GetByte_TimeOut(P, T))   /* Return: 0 or else, P: pointer, T: TimeOut, NOT_SUPPORT: POSIX */
+#define PUT_CHAR(C)         (AURIX_TC3_ASCLIN0_PutByte((uint8_t)C))     // has return value
+#define DEL_CHAR()          (AURIX_TC3_ASCLIN0_DelByte())               // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 
@@ -78,9 +82,10 @@ extern "C" {
     AURIX_M3_ASCLIN1_Init();\
 }
 #define DEINIT_COMM_IO()    (AURIX_M3_ASCLIN1_Deinit())
-#define GET_CHAR()          ((uint8_t)AURIX_M3_ASCLIN1_GetByte())  // has return value
-#define PUT_CHAR(C)         (AURIX_M3_ASCLIN1_PutByte((uint8_t)C))   // has return value
-#define DEL_CHAR()          (AURIX_M3_ASCLIN1_DelByte())     // has no return
+#define GET_CHAR()          ((uint8_t)AURIX_M3_ASCLIN1_GetByte())       // has return value
+#define GET_CHAR_TIME(P, T) (AURIX_M3_ASCLIN1_GetByte_TimeOut(P, T))    /* Return: 0 or else, P: pointer, T: TimeOut, NOT_SUPPORT: POSIX */
+#define PUT_CHAR(C)         (AURIX_M3_ASCLIN1_PutByte((uint8_t)C))      // has return value
+#define DEL_CHAR()          (AURIX_M3_ASCLIN1_DelByte())                // has no return
 #define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
 #define ECHO_CHAR(C)        PUT_CHAR(C)
 
@@ -92,6 +97,7 @@ extern "C" {
 #define INIT_COMM_IO()
 #define DEINIT_COMM_IO()
 #define GET_CHAR()          '\0'
+#define GET_CHAR_TIME(P, T) '\0'
 #define PUT_CHAR(C)         '\0'
 #define DEL_CHAR()
 #define ESC_CHAR()

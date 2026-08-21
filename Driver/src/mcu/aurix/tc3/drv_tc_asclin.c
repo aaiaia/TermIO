@@ -201,6 +201,11 @@ static inline void AURIX_TC3_ASCLIN_Init(IfxAsclin_Asc_Config *ascConfig, Ifx_AS
     ascConfig->pins = ascPins;
     /* Set the desired baud rate */
     ascConfig->baudrate.baudrate = UART_BAUDRATE;
+    /* Set OVerSamping to MAX: Pleya */
+    ascConfig->baudrate.oversampling = IfxAsclin_OversamplingFactor_16; // oversampling factor 16
+    /* Set Tx / Rx Buffer Out Size -> Bytes: PleYa */
+    ascConfig->fifo.inWidth = IfxAsclin_TxFifoInletWidth_1; // number of bytes 1
+    ascConfig->fifo.outWidth = IfxAsclin_RxFifoOutletWidth_1; // number of bytes 1
 
     (void)init_ASCLIN_UART_MODULE(ascConfig); /* Initialize module with above parameters */
 }
@@ -218,6 +223,19 @@ static inline unsigned char AURIX_TC3_ASCLIN_GetByte(IfxAsclin_Asc_Config* ascCo
     while(IfxAsclin_getRxFifoFillLevel(ascConfig->asclin) == 0);
     IfxAsclin_read8(ascConfig->asclin, &c, 1U);
     return c;
+}
+
+static inline int AURIX_TC3_ASCLIN_GetByte_TimeOut(IfxAsclin_Asc_Config* ascConfig, uint8_t* c, uint32_t timeout)
+{
+    uint32_t time = 0U;
+    while(IfxAsclin_getRxFifoFillLevel(ascConfig->asclin) == 0)
+    {
+        time++;
+        if(timeout <= time) break;
+    }
+    IfxAsclin_read8(ascConfig->asclin, c, 1U);
+
+    return (time < timeout)?(0):(-1);
 }
 
 static inline void AURIX_TC3_ASCLIN_DelByte(IfxAsclin_Asc_Config* ascConfig)
@@ -241,7 +259,12 @@ void AURIX_TC3_ASCLIN0_PutByte(uint8_t c)
 
 uint8_t AURIX_TC3_ASCLIN0_GetByte(void)
 {
-    return (uint8_t)AURIX_TC3_ASCLIN_GetByte(&ascConfig0);;
+    return (uint8_t)AURIX_TC3_ASCLIN_GetByte(&ascConfig0);
+}
+
+int AURIX_TC3_ASCLIN0_GetByte_TimeOut(uint8_t* c, uint32_t timeout)
+{
+    return AURIX_TC3_ASCLIN_GetByte_TimeOut(&ascConfig0, c, timeout);
 }
 
 void AURIX_TC3_ASCLIN0_DelByte(void)
@@ -264,6 +287,11 @@ void AURIX_TC3_ASCLIN1_PutByte(uint8_t c)
 uint8_t AURIX_TC3_ASCLIN1_GetByte(void)
 {
     return (uint8_t)AURIX_TC3_ASCLIN_GetByte(&ascConfig1);;
+}
+
+int AURIX_TC3_ASCLIN1_GetByte_TimeOut(uint8_t* c, uint32_t timeout)
+{
+    return AURIX_TC3_ASCLIN_GetByte_TimeOut(&ascConfig1, c, timeout);
 }
 
 void AURIX_TC3_ASCLIN1_DelByte(void)

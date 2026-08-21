@@ -23,6 +23,7 @@ void S12X_Uart1_SetPin(void);
 void S12X_Uart1_Init(uint16_t reg16_scibd);
 uint8_t S12X_Uart1_PutByte(const uint8_t val);
 uint8_t S12X_Uart1_GetByte(void);
+int S12X_Uart1_GetByte_TimeOut(char* c, unsigned int timeout); /* NOT_TESTED */
 void S12X_Uart1_DelByte(void);
 void S12X_Uart1_SendString(const char* string, const char lf);
 void S12X_Uart1_SendData(const uint8_t* buffer, const size_t size);
