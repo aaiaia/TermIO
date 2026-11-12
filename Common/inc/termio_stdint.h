@@ -3,6 +3,7 @@
 #elif defined(__COMPILER_FCC911__)
 #include "fcc911_c99_stdint.h"
 #else
-//defined(__GNUC__) || defined(__TASKING__)
+#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
 #include <stdint.h>
+#endif
 #endif

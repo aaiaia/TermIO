@@ -16,7 +16,10 @@ void (*jumpFunc)(void) = (void (*)(void))0UL;
 void test_TermIO(void) {
 #if 1   /* MENU_IO */
     union {
-#if OINTER____SIZEOF_POINTER__ == 2/* GNUC */
+#if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
+        uintptr_t uptr;
+#endif
+#if __SIZEOF_POINTER__ == 2/* GNUC */
         uint16_t u16;
         uint16_t uint;
 #elif __SIZEOF_POINTER__ == 4/* GNUC */
@@ -29,6 +32,8 @@ void test_TermIO(void) {
 /* https://www.tasking.com/documentation/tricore/ctc/reference/clang_memqual.html */
         uint32_t u32;
         uint32_t uint;
+#elif defined(__ghs__)
+        size_t size;
 #else
 #error "__SIZEOF_POINTER__ is not supported"
 #endif
