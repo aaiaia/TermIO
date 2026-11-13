@@ -92,6 +92,23 @@ extern "C" {
 #define CTRL_KEY_ESC        ASCII_CHAR_ESC
 #define CTRL_KEY_DELETE     ASCII_CHAR_BS
 #define CTRL_KEY_ENTER      ASCII_CHAR_LF
+#elif ( defined(__GNUC__) && defined(__RH850G4MH__) ) \
+ || ( defined(__ghs__) && defined(__RH850G4MH__) )/* MCU */
+#include "drv_g4mh_rln.h"
+#define INIT_COMM_IO() { \
+    RH850_G4MH_RLN30_Init();\
+}
+#define DEINIT_COMM_IO()    (RH850_G4MH_RLN30_Deinit())
+#define GET_CHAR()          ((uint8_t)RH850_G4MH_RLN30_GetByte())       // has return value
+#define GET_CHAR_TIME(P, T) (RH850_G4MH_RLN30_GetByte_TimeOut(P, T))    /* Return: 0 or else, P: pointer, T: TimeOut, NOT_SUPPORT: POSIX */
+#define PUT_CHAR(C)         (RH850_G4MH_RLN30_PutByte((uint8_t)C))      // has return value
+#define DEL_CHAR()          (RH850_G4MH_RLN30_DelByte())                // has no return
+#define ESC_CHAR()          PUT_CHAR(ASCII_CHAR_LF)
+#define ECHO_CHAR(C)        PUT_CHAR(C)
+
+#define CTRL_KEY_ESC        ASCII_CHAR_ESC
+#define CTRL_KEY_DELETE     ASCII_CHAR_BS
+#define CTRL_KEY_ENTER      ASCII_CHAR_LF
 #else/* COMPILER_ID + NOT_SUPPORT */
 #warning "Not Support TermIO in this COMPILER"
 #define INIT_COMM_IO()
